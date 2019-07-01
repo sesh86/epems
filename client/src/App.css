@@ -1,0 +1,20 @@
+.page-item.active .page-link{
+  background: grey;
+  color: #fff;
+  border-color:grey
+}
+
+.page-link{color:grey}
+
+tr th {
+  cursor: pointer;
+  text-transform:capitalize
+}
+
+a{color:#343a40}
+
+a.navLink{color:#A4A4A4}
+
+a.nav-link > .active{color:#E6E6E6}
+
+a:hover{color:grey;text-decoration: none}
