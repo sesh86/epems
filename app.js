@@ -12,8 +12,8 @@ var mongoose=require('mongoose');
 var Schema = mongoose.Schema;
 
 const _app=require('./config.js');
-mongoose.connect('mongodb://'+_app.user+':'+_app.pwd+'@cluster0-shard-00-00-lemrd.mongodb.net:27017,cluster0-shard-00-01-lemrd.mongodb.net:27017,cluster0-shard-00-02-lemrd.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin',{useNewUrlParser: true});
-
+//mongoose.connect('mongodb://'+_app.user+':'+_app.pwd+'@cluster0-shard-00-00-lemrd.mongodb.net:27017,cluster0-shard-00-01-lemrd.mongodb.net:27017,cluster0-shard-00-02-lemrd.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin',{useNewUrlParser: true});
+mongoose.connect('mongodb://sesh:sesh1234@127.0.0.1:27017/test',{useNewUrlParser: true});
 var students = mongoose.model('students', {student: String, mobile:String, email:String,course:String,fee:Number,received:Number,status:String,dueDate:Date,payment:JSON,batch:String});
 
 var expenses = mongoose.model('expenses', {name: String, mobile:String, email:String,paidfor:String,payable:Number,paid:Number,status:String,dueDate:Date,payment:JSON});
@@ -65,6 +65,7 @@ app.post('/addExpense', function (req, res) {
   });  
 })
 
+app.get('/',function(req,res){res.send('test');});
 
 app.post('/addCandidate', function (req, res) {
   let candidate=new candidates(req.body);
@@ -156,7 +157,7 @@ app.post('/getExpenses', cors(corsOptions),function (req, res) {
     options['dueDate']={ $ne: null };
     sortBy={dueDate:1}
   }
-  console.log(options);
+  //console.log(options);
   if(req.body.orderBy) sortBy=req.body.orderBy;
   expenses.find(options,'_id name mobile email paidfor payable paid status dueDate').sort(sortBy).skip(req.body.rows*(req.body.page-1)).limit(req.body.rows).exec(function (err, data) {
     expenses.find(options).sort(sortBy).count().exec(function (err, count) {
@@ -178,7 +179,7 @@ app.post('/getEnqs', cors(corsOptions),function (req, res) {
     options['dueDate']={ $ne: null };
     sortBy={dueDate:1}
   }
-  console.log(options);
+  //console.log(options);
   if(req.body.orderBy) sortBy=req.body.orderBy;
   enqs.find(options,'_id name mobile email course source location assignedto status dueDate').sort(sortBy).skip(req.body.rows*(req.body.page-1)).limit(req.body.rows).exec(function (err, data) {
     enqs.find(options).sort(sortBy).count().exec(function (err, count) {
@@ -228,7 +229,7 @@ app.post('/updateStudent', cors(corsOptions),function (req, res) {
 
 app.post('/updateEnq', cors(corsOptions),function (req, res) {
   let body=req.body.body
-  console.log(body);
+  //console.log(body);
   enqs.updateOne({_id:req.body._id},body,function (err, data) {
       res.send(data) 
   });  
@@ -303,7 +304,7 @@ app.post('/addPayment', function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      console.log(payment.studentId);
+      //console.log(payment.studentId);
       students.updateOne({ _id:mongoose.Types.ObjectId(payment.studentId)},{$inc: {received:Number(payment.received)}},function (err, data) {
         if (err){return console.error(err);}
         else{
@@ -318,7 +319,7 @@ app.post('/addPayment', function (req, res) {
 // {"studentId":"5cfa30db7936a36cf1d82ce9","received":10000,"receivedDate":"06/07/2019"}
 app.post('/addComment', function (req, res) {
   let comment=new comments(req.body);
-  console.log(comment)
+  //console.log(comment)
   comment.save(function (err,data) {
     if (err) {
       console.log(err);

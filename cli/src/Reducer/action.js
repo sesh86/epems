@@ -51,7 +51,7 @@ export const changeLoading=()=>{
 export const mapDispatchStudents = (dispatch) => {
   return {
     getStudents: (options) =>{
-      const request = axios.post('http://localhost:8000/getStudents',options);
+      const request = axios.post('/getStudents',options);
       request.then(function(res){
         dispatch(getStudents(res.data))
       })
@@ -64,7 +64,7 @@ export const mapDispatchStudents = (dispatch) => {
 export const mapDispatchExpenses = (dispatch) => {
   return {
     getExpenses: (options) =>{
-      const request = axios.post('http://localhost:8000/getExpenses',options);
+      const request = axios.post('/getExpenses',options);
       request.then(function(res){
         dispatch(getExpenses(res.data))
       })
@@ -82,7 +82,7 @@ export const getEnqs=(res)=>{
 export const mapDispatchEnqs = (dispatch) => {
   return {
     getEnqs: (options) =>{
-      const request = axios.post('http://localhost:8000/getEnqs',options);
+      const request = axios.post('/getEnqs',options);
       request.then(function(res){
         dispatch(getEnqs(res.data))
       })
@@ -96,7 +96,7 @@ export const mapDispatchEnqs = (dispatch) => {
 export const mapDispatchEnquiry = (dispatch) => {
   return {
     getEnq: (options) =>{
-      const request = axios.post('http://localhost:8000/getEnq',options);
+      const request = axios.post('/getEnq',options);
       request.then(function(res){
         dispatch(getEnq(res.data))
       })
@@ -129,7 +129,7 @@ export const updPayment=(res)=>{
 export const mapDispatchExpense = (dispatch) => {
   return {
     getExpense: (options) =>{
-      const request = axios.post('http://localhost:8000/getExpense',options);
+      const request = axios.post('/getExpense',options);
       request.then(function(res){
         dispatch(getExpense(res.data))
       })
@@ -143,7 +143,7 @@ export const mapDispatchExpense = (dispatch) => {
 export const mapDispatchStudent = (dispatch) => {
   return {
     getStudent: (options) =>{
-      const request = axios.post('http://localhost:8000/getStudent',options);
+      const request = axios.post('/getStudent',options);
       request.then(function(res){
         dispatch(getStudent(res.data))
       })

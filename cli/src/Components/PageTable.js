@@ -23,7 +23,7 @@ class PageTable extends Component {
   }
 
     return (
-      <div className="container cat">
+      <div className="cat">
         <br/>
         <h1>{this.props.title}</h1>
         <br/>

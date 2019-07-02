@@ -13,7 +13,7 @@ class Enquiries extends Component {
     super(props);
 
     this.state = {
-      options: { searching:false,options: {}, filter: 'default', orderBy: { "dueDate": 1 }, page: 1, rows: 10,sort:8,order:0},
+      options: { searching:false,options: {}, filter: 'default', orderBy: { "dueDate": 1 }, page: 1, rows: 50,sort:8,order:0},
       res: { "count": 0, "data": [] },
     }
     this.callAPI()

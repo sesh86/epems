@@ -14,7 +14,6 @@ import Enquiry from './Components/Enquiry';
 
 
 import NavBar from './Components/NavBar';
-// import PageTable from './Components/PageTable';
 import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -29,7 +28,7 @@ ReactDOM.render(
 <div>
 <NavBar/>
 <Switch>
-<Route exact path="/" component={PaymentSummary}/>
+<Route exact path="/" component={Enquiries}/>
 <Route exact path="/paymentSummary" component={PaymentSummary}/>
 <Route exact path="/expenseSummary" component={ExpenseSummary}/>
 <Route path="/student/:sid" component={Student}/>
