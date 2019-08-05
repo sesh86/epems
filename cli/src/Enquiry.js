@@ -1,9 +1,8 @@
-  // status change in student page - done
+// status change in student page - done
 // create payment - status select - done
 // weekend/weekday batch  - done
 // search numbers - partial - done
 //change only due date
-import {Link} from 'react-router-dom';
 import axios from 'axios';
 import React, { Component } from 'react';
 import '../App.css';
@@ -31,7 +30,7 @@ class Enquiry extends Component {
         comm[ev.target.elements[i].name] = ev.target.elements[i].value;
       }
     }
-    comm['date']=getHTMLDate(new Date());
+
     let body={}
     // if(enquiry.dueDate===undefined){
       if(comm.comment===undefined){this.setState({error:'Please enter comment'});return;}
@@ -41,6 +40,8 @@ class Enquiry extends Component {
       let followup=true,closed=['Joined','Closed'];
 
       for(let i in closed ){
+        console.log(i)
+        console.log(i)
         if(closed[i]==comm.status){
           followup=false;break;
         }
@@ -84,13 +85,18 @@ class Enquiry extends Component {
     let data = this.props.state.enquiry,enq=data;
     return (
       <div  className="container">
-      <div>             
+      <div>
+        <h1>enquiry Details</h1>   
+             
         {(this.state.status!=='Closed')?
         <form onSubmit={this.onSubmit}>
           <br/>
           <div className="row">
             <div className="col-md-4 col-sm-12">
               Comment:<br /><input name="comment" type="text" className="form-control"/>
+            </div>
+            <div className="col-md-4 col-sm-12">
+              Comment Date:<br /><input type="Date" name="date" className="form-control" defaultValue={getHTMLDate(new Date())}/>
             </div>
             <div className="col-md-4 col-sm-12">
               Status<br />
@@ -103,28 +109,16 @@ class Enquiry extends Component {
               }
             </select>            
             </div>            
-            <div className="col-md-4 col-sm-12">Next Due Date:<br /><input type="Date" name="dueDate" className="form-control"/></div>
-          </div>
 
+          </div>
+          <div className="row">
+            <div className="col-12">Next Due Date:<br /><input type="Date" name="dueDate" className="form-control"/></div>
+          </div>
           <br/>
           {this.state.error!==''?<Alert variant="danger">{this.state.error}</Alert>:null}          
           <button className="form-control btn btn-dark">Submit</button>
         </form>:null}        
-
         <br/>  
-        <h3>Comments History</h3>
-        <table className="table">
-          <thead><tr><th>Comment</th><th>Date</th></tr></thead>
-          <tbody>
-          {enq.comments?enq.comments.map((pay,i) => (
-            <tr key={i}><td>{pay.comment}</td><td>{formatDate(new Date(pay.date))}</td></tr>
-          )):null}
-          </tbody>
-        </table>
-        <br/>
-        <h3>Enquiry Details</h3>
-        <Link to={'/edit/enquiry/'+this.props.match.params.sid}>Edit</Link>
-        <br/>
         <table className="table">
           <thead>
           </thead>
@@ -148,6 +142,16 @@ class Enquiry extends Component {
           </tbody>
         </table>
         <br/>
+        <h3>Comments History</h3>
+        <table className="table">
+          <thead><tr><th>Comment</th><th>Date</th></tr></thead>
+          <tbody>
+          {enq.comments?enq.comments.map((pay,i) => (
+            <tr key={i}><td>{pay.comment}</td><td>{formatDate(new Date(pay.date))}</td></tr>
+          )):null}
+          </tbody>
+        </table>
+
       </div>
     </div>
     );

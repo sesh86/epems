@@ -7,17 +7,17 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import '../App.css';
 import Alert from 'react-bootstrap/Alert'
-import {getHTMLDate,getCookie} from './General';
+import {getHTMLDate} from './General';
 import load from '../load.gif';
-import { formatDate } from './General';
+import { formatDate,getCookie } from './General';
 import { connect } from 'react-redux'
-import { mapDispatchExpense } from '../Reducer/action'
+import { mapDispatchStudent } from '../Reducer/action'
 
-class Expense extends Component {
+class Student extends Component {
   constructor(props) {
     super(props);
     if(!getCookie('jwt')) this.props.history.push('/login');
-    this.props.getExpense({name: this.props.match.params.sid });
+    this.props.getStudent({name: this.props.match.params.sid });
     this.state={error:'',status:'',updFlag:false}
   }
   componentDidMount() { }
@@ -30,24 +30,22 @@ class Expense extends Component {
         enquiry[ev.target.elements[i].name] = ev.target.elements[i].value;
       }
     }
-
     let body={}
-    // if(enquiry.dueDate===undefined){
+    if(enquiry.dueDate===undefined){
       if(enquiry.payment===undefined){this.setState({error:'Please enter an amount'});return;}
       else if(enquiry.mode===undefined){this.setState({error:'Please select a mode of payment'});return;}
       else if(enquiry.date===undefined){this.setState({error:'Please select a date'});return;}
-      let payments=[];
-      if(this.props.state.expense.payment){payments=this.props.state.expense.payment;} 
+      let payments=[];;
+      if(this.props.state.student.payment){payments=this.props.state.student.payment;} 
       payments.push(enquiry);
   
-      let paid=Number(this.props.state.expense.paid),payment=Number(enquiry.payment)
-      let total=paid+payment,status;
-      console.log(total)
-      if(total===this.props.state.expense.payable){
+      let received=Number(this.props.state.student.received),payment=Number(enquiry.payment)
+      let total=received+payment,status;
+      if(total===this.props.state.student.fee){
         status='Complete';
       }
       else{status='Pending';if(enquiry.dueDate===undefined){this.setState({error:'Please select next Due Date'});return;}}
-      
+  
       for (let i in ev.target.elements) {
         if (ev.target.elements[i].value !== undefined && ev.target.elements[i].value !== '') {
           ev.target.elements[i].value=null;
@@ -57,19 +55,17 @@ class Expense extends Component {
   
       if(!enquiry.dueDate) enquiry.dueDate=null;
   
-      body={payment:payments,status:status,dueDate:enquiry.dueDate,paid:total};
-    // }
-    // else{
-    // console.log('else')
-    //   delete enquiry.date;
-    //   body={dueDate:enquiry.dueDate};
-    // }
-    console.log(body)
-    // return;
-    axios.post('/updateExpense',{_id:this.props.state.expense._id,body:body})
+      body={payment:payments,status:status,dueDate:enquiry.dueDate,received:total};      
+    }
+    else{
+      delete enquiry.date;
+      body={dueDate:enquiry.dueDate};
+    }
+
+    axios.post('/updateStudent',{_id:this.props.state.student._id,body:body})
     .then(res=>{
-        this.props.history.push('/expense/'+this.props.state.expense._id)
-        this.props.updExpense(body)
+        this.props.history.push('/student/'+this.props.state.student._id)
+        this.props.updPayment(body)
     })    
   }
   statuses = ['Pending', 'Complete', 'Discontinued']
@@ -79,20 +75,21 @@ class Expense extends Component {
 
       let body={status:status,dueDate:null};
 
-      axios.post('/updateExpense',{_id:this.props.state.expense._id,body:body})
+      axios.post('/updateStudent',{_id:this.props.state.student._id,body:body})
       .then(res=>{
-          this.props.history.push('/expense/'+this.props.state.expense._id);
+          this.props.history.push('/student/'+this.props.state.student._id);
           this.setState({status:status,updFlag:true})
           // this.props.updPayment(body)
       })          
   }
   render() {
-    let data = this.props.state.expense,payment=data;
+    let data = this.props.state.student,payment=data;
+    console.log(data)
     return (
       <div  className="container">
       {data.payment.length!==0?
       <div>
-        <h1>Expense Details</h1>        
+        <h1>Student Payment Details</h1>        
         {(this.state.status==='Pending' ||(data.status==='Pending' && !this.state.updFlag))?
         <form onSubmit={this.onSubmit}>
           <br/>
@@ -123,17 +120,18 @@ class Expense extends Component {
           <button className="form-control btn btn-dark">Submit</button>
         </form>:null}        
         <br/>  
+        <h3>Payment Summary</h3>      
         <table className="table">
           <thead>
           </thead>
           <tbody>
-          <tr><th>Name</th><td>{data.name}</td></tr>
+          <tr><th>Name</th><td>{data.student}</td></tr>
           <tr><th>Mobile</th><td>{data.mobile}</td></tr>
           <tr><th>Email</th><td>{data.email}</td></tr>
-          <tr><th>Course</th><td>{data.paidfor}</td></tr>
-          <tr><th>Fee</th><td>{data.payable}</td></tr>
-          <tr><th>Received</th><td>{data.paid}</td></tr>
-          <tr><th>Balance</th><td>{data.payable-data.paid}</td></tr>
+          <tr><th>Course</th><td>{data.course}</td></tr>
+          <tr><th>Fee</th><td>{data.fee}</td></tr>
+          <tr><th>Received</th><td>{data.received}</td></tr>
+          <tr><th>Balance</th><td>{data.fee-data.received}</td></tr>
           <tr><th>Status</th><td>
           {(this.state.status==='Pending' ||(data.status==='Pending' && !this.state.updFlag))?
               <select onChange={this.onChange} className="form-control" defaultValue={data.status}>
@@ -173,4 +171,4 @@ class Expense extends Component {
 
 const mapStateToProps = (state) => { return { state: state } }
 
-export default connect(mapStateToProps, mapDispatchExpense)(Expense);
+export default connect(mapStateToProps, mapDispatchStudent)(Student);

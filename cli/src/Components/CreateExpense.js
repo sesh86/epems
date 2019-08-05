@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import axios from 'axios';
-import {getHTMLDate} from './General';
+import {getHTMLDate,getCookie} from './General';
 import Alert from 'react-bootstrap/Alert'
 class CreateExpense extends Component {
+  constructor(props) {
+    super(props);
+    if(!getCookie('jwt')) this.props.history.push('/login');
+  }    
   batches = ['Weekday', 'Weekends']
   modes = ['Cash', 'Card','Paytm','Online']
   state={error:''}
@@ -46,8 +50,8 @@ class CreateExpense extends Component {
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
           Name*<input type="text" name="name" required className="form-control"/>
-          Mobile*<input type="number" name="mobile" required className="form-control"/>
-          Email*<input type="email" name="email" required className="form-control"/>
+          Mobile<input type="number" name="mobile" className="form-control"/>
+          Email<input type="email" name="email" className="form-control"/>
           PaidFor*<input type="text" name="paidfor" required className="form-control"/>
           Payable*<input type="number" name="payable" required className="form-control"/>
           <br/> 

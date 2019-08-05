@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import axios from 'axios';
-import {getHTMLDate,getCookie,courses} from './General';
+import {getHTMLDate,getCookie} from './General';
 import Alert from 'react-bootstrap/Alert'
 class CreateEnq extends Component { 
   constructor(props) {
     super(props);
     if(!getCookie('jwt')) this.props.history.push('/login');
   }  
-  emps=['Ramya','Ram','Divya','Sivaranjani','Bharath','JP','Balaji'];
+  emps=['Ramya','Ram','Divya','Aarti','Bharath'];
   sources = ['Walkin', 'Google', 'Sulekha', 'UrbanPro', 'Direct Call', 'Direct Email', 'Reference']
+  courses = ['Aws Sysops','AWS Training','Azure Infra Structure','Azure Architecture','Azure Developer','Azure DevOps','BlockChain','Google Cloud','Salesforce','Salesforce Admin','Salesforce Developer','Data Analytics','Alteryx','Artificial Intelligence','Chatbots using python','Data Science','Data Science Using R','Data Science Using Python','Datastage','Deep Learning Using Python','Informatica','Informatica MDM','Machine Learning Using R','Machine learning Using Python','Power BI','QlikSense','QlikView','Tableau','Big Data','Big Data Analytics','Hadoop','Spark and Scala','Pyspark','RPA','Automation Anywhere','Blue Prism','UiPath','Networking','CCNA Swtiching and Routing','CCNA Security','CCNP Security','CCNP Swtiching and Routing','CCIE','Cyber Security','Ethical Hacking','Django','GO Language','Python','UNIX Shell','Web Development','Angular 7','Angular JS','Full Stack','Java Script','MEAN Stack','MERN Stack','Node JS','PHP','React Js','UI Developer','Vue Js','Web Designing','Android','C&C++','Core Java','Data Structure & Algorithm','DotNet','Hibernate','iOS','IOT Using Python','IOT','J2EE','Java','Linux','MVC','Oracle','PLSQL','Spring','SQL','Struts','Software Testing','Automation Testing','Coded UI','ETL Testing','Jmeter','LoadRunner','Manual Testing','QTP','Selenium with C#','Selenium with Java','Selenium with Python','Pega','Other']
   status = ['Open', 'Closed','Visited','Demo Attended','In-Progress','Joined']
   state={error:''}
   onSubmit=(ev)=>{
@@ -21,15 +22,13 @@ class CreateEnq extends Component {
           login[ev.target.elements[i].name]=ev.target.elements[i].value;
         }
     }
-
+    console.log(login.comment)
     let comments=[],comment;
     if(login.comment!==undefined && login.comment!=='')
         comment=login.comment;
 
     login['comments']=[{comment:comment,date:new Date()}];
 
-    console.log(login);
-    // return;    
     axios.post('/createEnq',login)
     .then(res=>{
         this.props.history.push('/')
@@ -48,9 +47,8 @@ class CreateEnq extends Component {
           <div className="form-group">
           Name*<input type="text" name="name" required className="form-control"/>
           Mobile*<input type="number" name="mobile" required className="form-control"/>
-          Alternate Mobile<input type="number" name="alternatemobile" className="form-control"/>
           Email<input type="email" name="email" className="form-control"/>
-          Course*<select required name="course" className="form-control"><option></option>{courses.map((course,i) => (<option key={i}>{course}</option>))}</select>
+          Course*<select required name="course" className="form-control"><option></option>{this.courses.map((course,i) => (<option key={i}>{course}</option>))}</select>
           Location<input type="text" name="location" className="form-control"/>
           Source*<select required name="source" className="form-control"><option></option>{this.sources.map((s,i) => (<option key={i}>{s}</option>))}</select>
           Assigned To*

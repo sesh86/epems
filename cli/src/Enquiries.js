@@ -15,7 +15,7 @@ class Enquiries extends Component {
     if(!getCookie('jwt')) this.props.history.push('/login');
     
     this.state = {
-      options: { searching:false,options: {}, filter: 'default', orderBy: { "dueDate": 1 }, page: 1, rows: 50,sort:8,order:0},
+      options: { searching:false,options: {}, filter: 'All', orderBy: { "dueDate": 1 }, page: 1, rows: 10,sort:8,order:0},
       res: { "count": 0, "data": [] },
     }
     this.callAPI()
@@ -24,20 +24,6 @@ class Enquiries extends Component {
     console.log(this.state.search)
     this.props.getEnqs(this.state.options);
   }
-  getAll = () => {
-    let options = this.state.options,filt=this.state.filt;
-    options.options={}
-    if(options.filter==='All'){
-      options.filter='default'
-      filt='with DueDate';
-    }
-    else{
-      options.filter='All'
-      filt='All'
-    }
-    this.setState = { options: options,filt:filt }
-    this.callAPI();
-  }    
   getPage = (e) => {
     let options = this.state.options;
     options['page'] = e;
@@ -76,6 +62,16 @@ class Enquiries extends Component {
       options.options[ev.target.name]=ev.target.value;
     else 
       delete options.options[ev.target.name]
+    // for(let i in options){
+    //   if(options[i]['$and']) delete options[i]
+    // }    
+    // let opt=options.options;
+    // opt.map((e,i)=>{
+    //   if(e['$and']){opt.splice(i,1)}
+    // });
+    
+    // if(and.length>0)
+    //   options.options = { "$and": and };
 
     this.setState = { options: options}
     this.callAPI();
@@ -115,7 +111,7 @@ class Enquiries extends Component {
       this.callAPI();
     }
   }
-  emps=['Ramya','Ram','Divya','Sivaranjani','Bharath','JP','Balaji'];
+  emps=['Ramya','Ram','Divya','Aarti','Bharath'];
   sources = ['Walkin', 'Google', 'Sulekha', 'UrbanPro', 'Direct Call', 'Direct Email', 'Reference']
   courses = ['Aws Sysops','AWS Training','Azure Infra Structure','Azure Architecture','Azure Developer','Azure DevOps','BlockChain','Google Cloud','Salesforce','Salesforce Admin','Salesforce Developer','Data Analytics','Alteryx','Artificial Intelligence','Chatbots using python','Data Science','Data Science Using R','Data Science Using Python','Datastage','Deep Learning Using Python','Informatica','Informatica MDM','Machine Learning Using R','Machine learning Using Python','Power BI','QlikSense','QlikView','Tableau','Big Data','Big Data Analytics','Hadoop','Spark and Scala','Pyspark','RPA','Automation Anywhere','Blue Prism','UiPath','Networking','CCNA Swtiching and Routing','CCNA Security','CCNP Security','CCNP Swtiching and Routing','CCIE','Cyber Security','Ethical Hacking','Django','GO Language','Python','UNIX Shell','Web Development','Angular 7','Angular JS','Full Stack','Java Script','MEAN Stack','MERN Stack','Node JS','PHP','React Js','UI Developer','Vue Js','Web Designing','Android','C&C++','Core Java','Data Structure & Algorithm','DotNet','Hibernate','iOS','IOT Using Python','IOT','J2EE','Java','Linux','MVC','Oracle','PLSQL','Spring','SQL','Struts','Software Testing','Automation Testing','Coded UI','ETL Testing','Jmeter','LoadRunner','Manual Testing','QTP','Selenium with C#','Selenium with Java','Selenium with Python','Pega','Other']
   statuses = ['Open', 'Closed','Visited','Demo Attended','In-Progress','Joined']
@@ -130,9 +126,7 @@ class Enquiries extends Component {
     catch(e){}
     console.log(searched)
     return (
-      <div className="container">  
-      <ButtonToolbar><Button onClick={()=>this.getAll()} variant="secondary ">{this.state.options.filter==='All'?'Show Enquiries with Due Date':'Show All Enquiries'}</Button></ButtonToolbar >      
-      <br/>
+      <div className="container">        
       {!loading?
       <div>
       <h5>Filters</h5>

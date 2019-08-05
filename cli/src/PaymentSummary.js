@@ -12,7 +12,6 @@ class PaymentSummary extends Component {
   constructor(props) {
     super(props);
     if(!getCookie('jwt')) this.props.history.push('/login');
-    if(getCookie('role')!=='admin') this.props.history.push('/');
     this.state = {
       options: { searching:false,options: {}, filter: 'default', orderBy: { "dueDate": 1 }, page: 1, rows: 10,sort:6,order:0},
       res: { "count": 0, "data": [] },

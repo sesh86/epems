@@ -9,13 +9,14 @@ import '../App.css';
 import Alert from 'react-bootstrap/Alert'
 import {getHTMLDate} from './General';
 import load from '../load.gif';
-import { formatDate } from './General';
+import { formatDate,getCookie } from './General';
 import { connect } from 'react-redux'
 import { mapDispatchStudent } from '../Reducer/action'
 
 class Student extends Component {
   constructor(props) {
     super(props);
+    if(!getCookie('jwt')) this.props.history.push('/login');
     this.props.getStudent({name: this.props.match.params.sid });
     this.state={error:'',status:'',updFlag:false}
   }
@@ -143,9 +144,14 @@ class Student extends Component {
             </select>
             :<span>{this.state.status!==''?this.state.status:data.status}</span> 
             }
-
             </td>
             </tr>
+            <tr><th>Batch</th><td>{data.batch}</td></tr>
+            <tr><th>Class Commencement</th><td>{data.classcomment}</td></tr>
+            <tr><th>Trainer Name</th><td>{data.trainername}</td></tr>
+            <tr><th>Trainer Fee</th><td>{data.trainerfee}</td></tr>
+            <tr><th>Received By</th><td>{data.receivedby}</td></tr>
+            <tr><th>Source</th><td>{data.source}</td></tr>
             <tr><th>Followup Date</th>
             <td>{data.dueDate?formatDate(new Date(data.dueDate)):null}</td></tr>
           </tbody>

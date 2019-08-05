@@ -11,9 +11,12 @@ import CreatePayment from './Components/CreatePayment';
 import CreateExpense from './Components/CreateExpense';
 import CreateEnq from './Components/CreateEnq';
 import Enquiry from './Components/Enquiry';
+import Login from './Components/Login';
+import EditEnquiry from './Components/EditEnquiry';
 
 
 import NavBar from './Components/NavBar';
+// import PageTable from './Components/PageTable';
 import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -38,8 +41,8 @@ ReactDOM.render(
 <Route path="/CreateEnq" component={CreateEnq}/>
 <Route path="/Enquiries" component={Enquiries}/>
 <Route path="/Enquiry/:sid" component={Enquiry}/>
-
-
+<Route path="/Login" component={Login}/>
+<Route path="/edit/enquiry/:sid" component={EditEnquiry}/>
 
 </Switch>
 </div>

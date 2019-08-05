@@ -28,7 +28,6 @@ const enqs = mongoose.model('enqs', {name: String, mobile:String, alternatemobil
 
 // {"name":"","filter":"all","orderBy":{"student":1},"page":2,"rows":2}	
 app.post('/getStudents', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let query=req.body.name==undefined?'':req.body.name;
   let options=req.body.options,sortBy={dueDate:1};
   let dueDate='';
@@ -52,7 +51,6 @@ app.post('/getStudents', cors(corsOptions),function (req, res) {
 
 // {"name":"","filter":"all","orderBy":{"student":1},"page":2,"rows":2}	
 app.post('/getExpenses', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let query=req.body.name==undefined?'':req.body.name;
   let options=req.body.options,sortBy={dueDate:1};
   
@@ -74,7 +72,6 @@ app.post('/getExpenses', cors(corsOptions),function (req, res) {
 })
 
 app.post('/getEnqs', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let query=req.body.name==undefined?'':req.body.name;
   let options=req.body.options,sortBy={dueDate:1};
   
@@ -97,20 +94,17 @@ app.post('/getEnqs', cors(corsOptions),function (req, res) {
 })
 
 app.post('/getExpense', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   expenses.find({_id:req.body.name}).exec(function (err, data) {
       res.send(data) 
   });  
 });
 
 app.post('/getStudent', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   students.find({_id:req.body.name}).exec(function (err, data) {
       res.send(data) 
   });  
 });
 app.post('/getEnq', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   enqs.find({_id:req.body.name}).exec(function (err, data) {
       res.send(data) 
   });  
@@ -125,7 +119,6 @@ app.post('/test', cors(corsOptions),function (req, res) {
 
 
 app.post('/updateStudent', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let body=req.body.body
   // res.send('check');
   students.updateOne({_id:req.body._id},body,function (err, data) {
@@ -134,16 +127,6 @@ app.post('/updateStudent', cors(corsOptions),function (req, res) {
 });
 
 app.post('/updateEnq', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
-  let body=req.body.body
-  console.log(body);
-  enqs.updateOne({_id:req.body._id},body,function (err, data) {
-      res.send(data) 
-  });  
-});
-
-app.post('/updateEnqDetails', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let body=req.body.body
   console.log(body);
   enqs.updateOne({_id:req.body._id},body,function (err, data) {
@@ -152,7 +135,6 @@ app.post('/updateEnqDetails', cors(corsOptions),function (req, res) {
 });
 
 app.post('/updateExpense', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let body=req.body.body
   expenses.updateOne({_id:req.body._id},body,function (err, data) {
       res.send(data) 
@@ -160,7 +142,6 @@ app.post('/updateExpense', cors(corsOptions),function (req, res) {
 });
 
 app.post('/createPayment', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let student=new students(req.body);
   student.save(function (err,data) {
     if (err) {
@@ -172,7 +153,6 @@ app.post('/createPayment', cors(corsOptions),function (req, res) {
 });
 
 app.post('/createExpense', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let expense=new expenses(req.body);
   expense.save(function (err,data) {
     if (err) {
@@ -183,7 +163,6 @@ app.post('/createExpense', cors(corsOptions),function (req, res) {
   }); 
 });
 app.post('/createEnq', cors(corsOptions),function (req, res) {
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   let enq=new enqs(req.body);
   enq.save(function (err,data) {
     if (err) {
@@ -197,7 +176,7 @@ app.post('/createEnq', cors(corsOptions),function (req, res) {
 var user = mongoose.model('users', { name: String, email:String, password:String,role:String });
 
 app.post('/createUser',cors(corsOptions), function (req, res) {
-    if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
+    
     let l_user = new user(req.body);
     l_user.save(function (err) {
         res.send('User Created');
@@ -207,16 +186,15 @@ app.post('/createUser',cors(corsOptions), function (req, res) {
 app.post('/login', cors(corsOptions),function (req, res) {
   let l_user = req.body;
   user.find(l_user,{"email":1,"name":2,"role":3},function(err,data){
+    console.log(data[0])
     
     let l_data=JSON.stringify(data[0]);
 
     if(data.length){
       jwt.sign(l_data,'secret',
       (err,token)=>{
-        res.cookie('authorize',token,{httpOnly:true});
-        res.cookie('role',data[0].role);
-        res.cookie('jwt',token//,{ httpOnly: true }
-        ).send("Success");
+        res.cookie('role',data[0].role)
+        res.cookie('jwt',token).send("Success");
       });
     }
     else
@@ -225,37 +203,16 @@ app.post('/login', cors(corsOptions),function (req, res) {
 });
 
 app.post('/logout', cors(corsOptions),function(req, res){
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
   res.clearCookie('jwt');
   res.clearCookie('role');
-  res.clearCookie('authorize');
   res.send('logged out');
 });
-app.get('/', function(req, res){
-  res.send('success')
-});
+
 app.get('/cook', 
 function(req, res){
-  if(validateToken(req.cookies.authorize)!=='Valid'){res.send('Invalid token'); return}
+  if(validateToken(req.cookies.jwt)!=='Valid'){res.send('Invalid token'); return}
   res.send('Valid');
 });
-
-function validateToken(p_jwt){
-  console.log(p_jwt);
-  if(!p_jwt)
-  {
-    return('Invalid Token')
-  }
-  else{
-    try{
-      let data=jwt.verify(p_jwt, 'secret')
-      if(data.name && data.role) return 'Valid';
-    }
-    catch(e){
-      return('Invalid Token');}
-  }
-  return 'Valid';
-}
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -265,4 +222,4 @@ next();
 
 app.listen(8000, function () {
   console.log('Example app listening on port 8000!')
-}),{ httpOnly: true };
+});

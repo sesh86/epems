@@ -1,3 +1,2 @@
-module.exports.port=8080
-module.exports.user='sesh';
-module.exports.pwd='sesh.1234';
+var mongoose=require('mongoose');
+mongoose.connect('mongodb://sesh:sesh1234@127.0.0.1:27017/test',{useNewUrlParser: true});
